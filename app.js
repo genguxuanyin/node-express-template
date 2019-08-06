@@ -4,6 +4,8 @@ import path from 'path'
 // import cookieParser from 'cookie-parser';
 import passport from 'passport'
 import logger from 'morgan'
+import http from 'http'
+import Debug from 'debug'
 
 import profilesRouter from './routes/profiles'
 import usersRouter from './routes/users'
@@ -23,19 +25,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // passport 初始化
 app.use(passport.initialize());
-console.log(require('./config/passport'))
 require('./config/passport')['default'](passport);
 
 app.use('/api/profiles', profilesRouter);
 app.use('/api/users', usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -43,6 +44,79 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500).json(err);
   // res.render('error');
+});
+
+var debug = Debug('node-express-template:server');
+
+/**
+  * Get port from environment and store in Express.
+  */
+/**
+  * Normalize a port into a number, string, or false.
+  */
+const port = (function (val) {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+})(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+  * Create HTTP server.
+  */
+
+const server = http.createServer(app);
+
+/**
+  * Listen on provided port, on all network interfaces.
+  */
+
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
+/**
+  * Event listener for HTTP server "error" event.
+  */
+server.on('error', (error) => {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+});
+
+/**
+  * Event listener for HTTP server "listening" event.
+  */
+server.on('listening', () => {
+  const addr = server.address();
+  const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+  debug('Listening on ' + bind);
 });
 
 module.exports = app;
