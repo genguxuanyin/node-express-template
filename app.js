@@ -1,14 +1,19 @@
-import createError from 'http-errors'
-import express from 'express'
-import path from 'path'
-// import cookieParser from 'cookie-parser';
-import passport from 'passport'
-import logger from 'morgan'
-import http from 'http'
-import Debug from 'debug'
+const createError = require('http-errors')
+const express = require('express')
+const path = require('path')
+// import c const abc = require('cookie-parser';
+const passport = require('passport')
+const logger = require('morgan')
+const http = require('http')
+const Debug = require('debug')
 
-import profilesRouter from './routes/profiles'
-import usersRouter from './routes/users'
+const Passport = require('./config/passport')
+
+const profilesRouter = require('./routes/profiles')
+const usersRouter = require('./routes/users')
+
+//连接Mysql
+require('./db/connect')
 
 const app = express();
 
@@ -25,8 +30,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // passport 初始化
 app.use(passport.initialize());
-require('./config/passport')['default'](passport);
+Passport(passport);
 
+//路由 Router
 app.use('/api/profiles', profilesRouter);
 app.use('/api/users', usersRouter);
 
@@ -118,5 +124,3 @@ server.on('listening', () => {
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
 });
-
-module.exports = app;

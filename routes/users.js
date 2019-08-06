@@ -1,13 +1,13 @@
 // @login & register
-import express from 'express'
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import gravatar from 'gravatar'
-import keys from '../config/keys'
-import passport from 'passport'
-import Sequelize from 'sequelize'
+const express = require('express')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const gravatar = require('gravatar')
+const keys = require('../config/keys')
+const passport = require('passport')
+const Sequelize = require('sequelize')
 
-import User from '../models/User'
+const User = require('../models/User')
 
 const router = express.Router();
 const Op = Sequelize.Op;
@@ -132,4 +132,5 @@ router.get(
     });
   }
 );
-export default router;
+
+module.exports = router;

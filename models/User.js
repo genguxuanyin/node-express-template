@@ -1,6 +1,6 @@
-import sequelize from '../db/connect'
-import Sequelize from 'sequelize'
-import moment from 'moment'
+const sequelize = require('../db/connect')
+const Sequelize = require('sequelize')
+const moment = require('moment')
 
 const User = sequelize.define('t_user', {
     id:{
@@ -71,4 +71,4 @@ const User = sequelize.define('t_user', {
     }
 });
 
-export default User;
+module.exports = User;

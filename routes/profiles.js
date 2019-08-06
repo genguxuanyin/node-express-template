@@ -1,7 +1,7 @@
-import express from 'express'
-import passport from 'passport'
+const express = require('express')
+const passport = require('passport')
 
-import Profile from '../models/Profile'
+const Profile = require('../models/Profile')
 
 const router = express.Router();
 
@@ -146,4 +146,4 @@ router.delete(
   }
 );
 
-export default router;
+module.exports = router;

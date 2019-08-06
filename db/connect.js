@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize'
+const Sequelize = require('sequelize')
 const db = {
     host: 'localhost',
     user: 'root',
@@ -26,4 +26,5 @@ sequelize
     .catch(err => {
         console.error('Unable to connect to the database:', err);
     });
-export default sequelize;
+
+module.exports = sequelize;
